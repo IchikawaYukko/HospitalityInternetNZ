@@ -4,9 +4,11 @@ using System.Collections.Generic;
 //using System.Text;
 //using System.Threading.Tasks;
 
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Text;
 
 namespace HospitalityInternetNZ {
     class HospitalityNZauth {
@@ -132,7 +134,23 @@ namespace HospitalityInternetNZ {
 
         //Save Session cookie and Usage check URL.
         public void SaveState(string filename) {
-            // TODO
+            using ( var fs = new FileStream(filename, FileMode.Create, FileAccess.Write))
+            using ( var sw = new StreamWriter(fs)) {
+                foreach (Cookie cc in this._session_cookie) {
+                    sw.WriteLine(cc.ToString());
+                }
+                sw.WriteLine(this._usage_check_url);
+            }
+        }
+
+        public void LoadState(string filename) {
+            try {
+                using ( var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
+                using ( var sr = new StreamReader(fs)) {
+
+                } 
+            }catch (FileNotFoundException e) {
+            }
         }
     }
 }

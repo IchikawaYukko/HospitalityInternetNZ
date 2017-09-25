@@ -27,6 +27,7 @@ Sub-commands:
   status                   Show connection details.
 
 MIT License.";
+        const string STATE_FILENAME = "test.cookie";
 
         static void Main(string[] args)
         {
@@ -52,6 +53,8 @@ MIT License.";
                         } else {
                             // Try login
                             hNZauth.Login(args[1], args[2]);
+
+                            hNZauth.SaveState(STATE_FILENAME);
                             Console.WriteLine(hNZauth.CheckUsage());
                         }
                         break;
