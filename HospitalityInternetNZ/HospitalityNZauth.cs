@@ -76,15 +76,18 @@ namespace HospitalityInternetNZ {
             }
         }
 
-        public string CheckUsage() {
+        public Dictionary<string, string> CheckUsage() {
             var r = _client.GetAsync(_usage_check_url).Result;
-
+            var state = new Dictionary<string, string>();
             var result = r.Content.ReadAsStringAsync().Result;
 
             // HACK
             var start = result.IndexOf("msg = \"") + "msg = \"".Length;
             var end = result.IndexOf("\";", start);
-            return  result.Substring(start, end - start); // TODO return Dictionary instead string.
+            state.Add("msg", result.Substring(start, end - start));
+
+            return state;
+             // TODO return Dictionary instead string.
             //var byte = temp2.Substring(r.Content.ReadAsStringAsync().Result.IndexOf("byteamount = \"")
         }
 
@@ -147,9 +150,21 @@ namespace HospitalityInternetNZ {
             try {
                 using ( var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 using ( var sr = new StreamReader(fs)) {
+                    string line;
+                    var cookie = new Cookie();
 
+                    for (var i = 0; i < 2; i++) {
+                        line = sr.ReadLine();
+                        cookie.Name = line.Substring(0, line.LastIndexOf("="));
+                        cookie.Value = line.Substring(line.IndexOf("=") + 1);
+
+                        this._handler.CookieContainer.Add(new Uri(BASE_URL), cookie);
+                    }
+
+                    this._usage_check_url = sr.ReadLine();
                 } 
             }catch (FileNotFoundException e) {
+                // TODO
             }
         }
     }

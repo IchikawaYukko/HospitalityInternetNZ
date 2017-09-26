@@ -70,11 +70,14 @@ MIT License.";
                     case "stat":
                     case "status":
                         if (hNZauth.CheckLoggedIn()) {
+                            // Check remaining usage(MBs or Times)
+                            hNZauth.LoadState(STATE_FILENAME);
+                            var state = hNZauth.CheckUsage();
 
+                            Console.WriteLine("Remains: " + state["msg"]);
                         } else {
                             Console.WriteLine("You are not logged in.");
                         }
-                        // Check remaining usage(MBs or Times)
                         break;
                     default:
                         Console.WriteLine(args[0] + ": No such sub-command");
