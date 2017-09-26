@@ -1,8 +1,4 @@
 ﻿using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.Collections.Generic;
@@ -41,7 +37,7 @@ MIT License.";
 
             if (hNZauth.CheckConnected()) {
                 switch (args[0]) {
-                    case "login":   //login 46rf@h t632xgvm
+                    case "login":
                         if (args.Length != 3) {
                             Console.WriteLine("Please specify username and password.\n\nExample: login 1234@h passw0rd");
                             Environment.Exit(1);
@@ -50,12 +46,14 @@ MIT License.";
                         // Check Logged in or not
                         if (hNZauth.CheckLoggedIn()) {
                             Console.WriteLine("You are already logged in.");
+                            hNZauth.LoadState(STATE_FILENAME);
+                            PrintUsage(hNZauth.CheckUsage());
                         } else {
                             // Try login
                             hNZauth.Login(args[1], args[2]);
 
                             hNZauth.SaveState(STATE_FILENAME);
-                            Console.WriteLine(hNZauth.CheckUsage());
+                            PrintUsage(hNZauth.CheckUsage());
                         }
                         break;
                     case "logout":
@@ -72,15 +70,7 @@ MIT License.";
                         if (hNZauth.CheckLoggedIn()) {
                             // Check remaining usage(MBs or Times)
                             hNZauth.LoadState(STATE_FILENAME);
-                            var state = hNZauth.CheckUsage();
-
-                            Console.WriteLine("Logged in as:" + state["unicodeusername"]);
-                            Console.WriteLine("Charge Type: " + state["chargetype"]);
-                            Console.WriteLine("Remains : " + state["msg"]);
-                            Console.WriteLine("Remains [data]: " + state["byteamount"] + "bytes");
-                            Console.WriteLine("Remains [time]: " + state["sessionlength"] + "sec");
-                            Console.WriteLine("Session Cookie: " + state["session"]);
-                            Console.WriteLine("Registerd MAC address: " + state["umac"]);
+                            PrintUsage(hNZauth.CheckUsage());
                         } else {
                             Console.WriteLine("You are not logged in.");
                         }
@@ -94,8 +84,15 @@ MIT License.";
             }
         }
 
-        //private static checkArgs(string[] arg) {
-        //}
+        private static void PrintUsage(IDictionary<string, string> state) {
+            Console.WriteLine("Logged in as:" + state["unicodeusername"]);
+            Console.WriteLine("Charge Type: " + state["chargetype"]);
+            Console.WriteLine("Remains : " + state["msg"]);
+            Console.WriteLine("Remains [data]: " + state["byteamount"] + "bytes");
+            Console.WriteLine("Remains [time]: " + state["sessionlength"] + "sec");
+            Console.WriteLine("Session Cookie: " + state["session"]);
+            Console.WriteLine("Registerd MAC address: " + state["umac"]);
+        }
     }
 
     // TODO move another file
