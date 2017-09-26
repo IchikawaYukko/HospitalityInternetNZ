@@ -24,6 +24,7 @@ namespace HospitalityInternetNZ {
         const string BASE_URL = "http://" + AUTH_SERVER_ADDR + "/";
         const string LOGIN_URL = BASE_URL + "loginpages/userlogin.shtml";
         const string DNS_URL = BASE_URL + "loginpages/dns.shtml";
+        const double LOGIN_CHECK_TIMEOUT = 5000; //ms
 
         public HospitalityNZauth() {
             _handler = new HttpClientHandler() {
@@ -59,19 +60,21 @@ namespace HospitalityInternetNZ {
         public bool CheckLoggedIn() {
             try {
                 // Try access to initial URL
+                _client.Timeout = TimeSpan.FromMilliseconds(LOGIN_CHECK_TIMEOUT);
                 var r = _client.GetAsync(INIT_URL).Result;
+
+                // get and save session cookie
                 var cookie = _handler.CookieContainer;
                 _session_cookie = cookie.GetCookies(new Uri(BASE_URL + "loginpages/dns.shtml"));
-                //foreach (Cookie c in session) {
-                //    Console.WriteLine(c.Name);
-                //    Console.WriteLine(c.Value);
-                //}
+
                 return false;
-            } catch (Exception e) {
+            } catch (AggregateException e) {
                 //If timed out accessing initial URL, It has already logged in
-                if (!(e.InnerException.InnerException.InnerException is System.Net.Sockets.SocketException)) {
+                if (!(e.InnerException is System.Threading.Tasks.TaskCanceledException)) {
                     Console.WriteLine(e.InnerException.ToString());
+                    throw;
                 }
+                
                 return true;
             }
         }
@@ -81,17 +84,18 @@ namespace HospitalityInternetNZ {
             var state = new Dictionary<string, string>();
             var result = r.Content.ReadAsStringAsync().Result;
 
-            // HACK
-            var start = result.IndexOf("msg = \"") + "msg = \"".Length;
-            var end = result.IndexOf("\";", start);
-            state.Add("msg", result.Substring(start, end - start));
+            state.Add("msg", result.SubStringByToken("msg = \"", "\""));
+            state.Add("byteamount", result.SubStringByToken("byteamount = \"", "\""));
+            state.Add("session", result.SubStringByToken("session = \"", "\""));
+            state.Add("umac", result.SubStringByToken("umac = \"", "\""));
+            state.Add("unicodeusername", result.SubStringByToken("unicodeusername = \"", "\""));
+            state.Add("sessionlength", result.SubStringByToken("sessionlength = \"", "\""));
+            state.Add("chargetype", result.SubStringByToken("chargetype = \"", "\""));
 
             return state;
-             // TODO return Dictionary instead string.
-            //var byte = temp2.Substring(r.Content.ReadAsStringAsync().Result.IndexOf("byteamount = \"")
         }
 
-        public void Login(string username, string password) {
+        public void Login(string username, string password) {   // TODO Use WiFiTicket instead string
             this._user = username;  // HACK: no needed?
             this._pass = password;
 
@@ -107,21 +111,20 @@ namespace HospitalityInternetNZ {
 
                 var result = r.Content.ReadAsStringAsync().Result;
 
-                Console.WriteLine(r);
+                //Error handlings
                 if (result.Contains("Can%20not%20read%20data%20from%20Cookie")) {
                     Console.WriteLine("Can not read data from Cookie");     // HACK
                 }
-
                 if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("Invalid%20username%20or%20password")) {
                     Console.WriteLine("Invalid username or password");
 
-                    // throw
+                    // TODO throw exception
                 }
-
                 if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("Your%20have%20run%20out%20of%20your%20qouta")) {
                     Console.WriteLine("Your have run out of your qouta");
                 }
 
+                // save the URL for later uses.
                 _usage_check_url = BASE_URL + result.Substring(
                     result.IndexOf("/loginpages"),
                     result.LastIndexOf("\"") - result.IndexOf("/loginpages")
@@ -146,6 +149,7 @@ namespace HospitalityInternetNZ {
             }
         }
 
+        //Load saved states.
         public void LoadState(string filename) {
             try {
                 using ( var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))

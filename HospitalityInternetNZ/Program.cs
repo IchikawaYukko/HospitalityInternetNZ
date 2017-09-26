@@ -74,7 +74,13 @@ MIT License.";
                             hNZauth.LoadState(STATE_FILENAME);
                             var state = hNZauth.CheckUsage();
 
-                            Console.WriteLine("Remains: " + state["msg"]);
+                            Console.WriteLine("Logged in as:" + state["unicodeusername"]);
+                            Console.WriteLine("Charge Type: " + state["chargetype"]);
+                            Console.WriteLine("Remains : " + state["msg"]);
+                            Console.WriteLine("Remains [data]: " + state["byteamount"] + "bytes");
+                            Console.WriteLine("Remains [time]: " + state["sessionlength"] + "sec");
+                            Console.WriteLine("Session Cookie: " + state["session"]);
+                            Console.WriteLine("Registerd MAC address: " + state["umac"]);
                         } else {
                             Console.WriteLine("You are not logged in.");
                         }
@@ -112,6 +118,14 @@ MIT License.";
                 // Username must include @.
                 this.status = (int) WiFiTicket.TicketStatus.WRONG_ID_OR_PASS;
             }
+        }
+    }
+    public static class StringExtentions {
+        public static string SubStringByToken(this string text, string startToken, string endToken) {
+            var start = text.IndexOf(startToken) + startToken.Length;
+            var end   = text.IndexOf(endToken, start);
+
+            return text.Substring(start, end - start);
         }
     }
 }
