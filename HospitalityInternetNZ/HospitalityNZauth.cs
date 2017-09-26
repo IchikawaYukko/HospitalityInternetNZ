@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -12,8 +8,6 @@ using System.Text;
 
 namespace HospitalityInternetNZ {
     class HospitalityNZauth {
-        private string _user;
-        private string _pass;
         private HttpClient _client;
         private HttpClientHandler _handler;
         private CookieCollection _session_cookie;
@@ -79,11 +73,13 @@ namespace HospitalityInternetNZ {
             }
         }
 
+        // Check remaining usage(MBs or Times)
         public Dictionary<string, string> CheckUsage() {
             var r = _client.GetAsync(_usage_check_url).Result;
             var state = new Dictionary<string, string>();
             var result = r.Content.ReadAsStringAsync().Result;
 
+            // parse result text
             state.Add("msg", result.SubStringByToken("msg = \"", "\""));
             state.Add("byteamount", result.SubStringByToken("byteamount = \"", "\""));
             state.Add("session", result.SubStringByToken("session = \"", "\""));
@@ -95,17 +91,13 @@ namespace HospitalityInternetNZ {
             return state;
         }
 
-        public void Login(string username, string password) {   // TODO Use WiFiTicket instead string
-            this._user = username;  // HACK: no needed?
-            this._pass = password;
-
+        public void Login(WiFiTicket ticket) {
             var content = new FormUrlEncodedContent(new Dictionary<string, string> {
-                {"myusername", _user},
-                {"mypassword", _pass}
+                {"myusername", ticket.username},
+                {"mypassword", ticket.password}
             });
 
             try {
-                // TODO clear old session cookie in _handler.CookieContainer
                 _handler.CookieContainer.Add(new Uri(BASE_URL), _session_cookie);
                 var r = _client.PostAsync(LOGIN_URL, content).Result;
 
@@ -125,10 +117,7 @@ namespace HospitalityInternetNZ {
                 }
 
                 // save the URL for later uses.
-                _usage_check_url = BASE_URL + result.Substring(
-                    result.IndexOf("/loginpages"),
-                    result.LastIndexOf("\"") - result.IndexOf("/loginpages")
-                );
+                _usage_check_url = BASE_URL + "loginpages" + result.SubStringByToken("/loginpages" , "\"");
             } catch (Exception e) {
                 Console.WriteLine(e.InnerException.ToString());
             }
@@ -170,6 +159,15 @@ namespace HospitalityInternetNZ {
             }catch (FileNotFoundException e) {
                 // TODO
             }
+        }
+    }
+
+    public static class StringExtentions {
+        public static string SubStringByToken(this string text, string startToken, string endToken) {
+            var start = text.IndexOf(startToken) + startToken.Length;
+            var end = text.IndexOf(endToken, start);
+
+            return text.Substring(start, end - start);
         }
     }
 }

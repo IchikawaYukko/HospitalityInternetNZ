@@ -31,8 +31,6 @@ MIT License.";
                 System.Console.WriteLine(HELP_MSG);
                 Environment.Exit(1);
             }
-            var tickets = new List<WiFiTicket>();
-
             var hNZauth = new HospitalityNZauth();
 
             if (hNZauth.CheckConnected()) {
@@ -50,7 +48,8 @@ MIT License.";
                             PrintUsage(hNZauth.CheckUsage());
                         } else {
                             // Try login
-                            hNZauth.Login(args[1], args[2]);
+                            var ticket = new WiFiTicket(args[1], args[2]);
+                            hNZauth.Login(ticket);
 
                             hNZauth.SaveState(STATE_FILENAME);
                             PrintUsage(hNZauth.CheckUsage());
@@ -68,7 +67,6 @@ MIT License.";
                     case "stat":
                     case "status":
                         if (hNZauth.CheckLoggedIn()) {
-                            // Check remaining usage(MBs or Times)
                             hNZauth.LoadState(STATE_FILENAME);
                             PrintUsage(hNZauth.CheckUsage());
                         } else {
@@ -84,6 +82,7 @@ MIT License.";
             }
         }
 
+        // format state message
         private static void PrintUsage(IDictionary<string, string> state) {
             Console.WriteLine("Logged in as:" + state["unicodeusername"]);
             Console.WriteLine("Charge Type: " + state["chargetype"]);
@@ -92,37 +91,6 @@ MIT License.";
             Console.WriteLine("Remains [time]: " + state["sessionlength"] + "sec");
             Console.WriteLine("Session Cookie: " + state["session"]);
             Console.WriteLine("Registerd MAC address: " + state["umac"]);
-        }
-    }
-
-    // TODO move another file
-    class WiFiTicket {
-        public readonly string username;
-        public readonly string password;
-        public int status;
-        public enum TicketStatus {
-            WRONG_ID_OR_PASS,
-            USING,
-            UNUSED,
-            EXPIRED
-        }
-
-        public WiFiTicket(string user, string pass) {
-            this.username = user;
-            this.password = pass;
-
-            if (!username.Contains("@")) {
-                // Username must include @.
-                this.status = (int) WiFiTicket.TicketStatus.WRONG_ID_OR_PASS;
-            }
-        }
-    }
-    public static class StringExtentions {
-        public static string SubStringByToken(this string text, string startToken, string endToken) {
-            var start = text.IndexOf(startToken) + startToken.Length;
-            var end   = text.IndexOf(endToken, start);
-
-            return text.Substring(start, end - start);
         }
     }
 }
