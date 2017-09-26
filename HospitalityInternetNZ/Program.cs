@@ -23,7 +23,7 @@ Sub-commands:
   status                   Show connection details.
 
 MIT License.";
-        const string STATE_FILENAME = "test.cookie";
+        const string STATE_FILENAME = "session.cookie";
 
         static void Main(string[] args)
         {
