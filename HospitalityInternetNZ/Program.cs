@@ -90,7 +90,7 @@ MIT License.";
             Console.WriteLine("Remains [data]: " + state["byteamount"] + "bytes");
             Console.WriteLine("Remains [time]: " + state["sessionlength"] + "sec");
             Console.WriteLine("Session Cookie: " + state["session"]);
-            Console.WriteLine("Registerd MAC address: " + state["umac"]);
+            Console.WriteLine("Registered MAC address: " + state["umac"]);
         }
     }
 }

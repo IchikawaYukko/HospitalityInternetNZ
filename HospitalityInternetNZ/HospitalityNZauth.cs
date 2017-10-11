@@ -89,6 +89,15 @@ namespace HospitalityInternetNZ {
             state.Add("chargetype", result.SubStringByToken("chargetype = \"", "\""));
 
             return state;
+            /*
+Logged in as:46rf@h
+Charge Type: DATA
+Remains : The user is offline.
+Remains [data]: 301356540bytes
+Remains [time]: 0sec
+Session Cookie: FVS74HO7pIOfpHO7rGeDuJNUoTRH4HeL1MfL1IOD1HvT1Ie/1He7hYBgoUOvrJN3tIb067
+Registerd MAC address: 24:FD:52:3F:61:20
+*/
         }
 
         public void Login(WiFiTicket ticket) {
@@ -129,6 +138,7 @@ namespace HospitalityInternetNZ {
 
         //Save Session cookie and Usage check URL.
         public void SaveState(string filename) {
+            // TODO set hidden attibute to session file.
             using ( var fs = new FileStream(filename, FileMode.Create, FileAccess.Write))
             using ( var sw = new StreamWriter(fs)) {
                 foreach (Cookie cc in this._session_cookie) {
