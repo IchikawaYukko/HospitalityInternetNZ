@@ -113,16 +113,28 @@ Registerd MAC address: 24:FD:52:3F:61:20
                 var result = r.Content.ReadAsStringAsync().Result;
 
                 //Error handlings
+                var unknown_error = true;   // HACK
                 if (result.Contains("Can%20not%20read%20data%20from%20Cookie")) {
                     Console.WriteLine("Can not read data from Cookie");     // HACK
+                    unknown_error = false;
                 }
                 if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("Invalid%20username%20or%20password")) {
                     Console.WriteLine("Invalid username or password");
+                    unknown_error = false;
 
                     // TODO throw exception
                 }
                 if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("Your%20have%20run%20out%20of%20your%20qouta")) {
                     Console.WriteLine("Your have run out of your qouta");
+                    unknown_error = false;
+                }
+                if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("The%20account%20is%20expired")) {
+                    Console.WriteLine("The account is expired");
+                    unknown_error = false;
+                }
+                if (unknown_error) {
+                    Console.WriteLine(r.RequestMessage.RequestUri.AbsoluteUri);
+                    Console.WriteLine(result);
                 }
 
                 // save the URL for later uses.
@@ -166,7 +178,7 @@ Registerd MAC address: 24:FD:52:3F:61:20
 
                     this._usage_check_url = sr.ReadLine();
                 } 
-            }catch (FileNotFoundException e) {
+            }catch (FileNotFoundException) {
                 // TODO
             }
         }
