@@ -132,6 +132,10 @@ Registerd MAC address: 24:FD:52:3F:61:20
                     Console.WriteLine("The account is expired");
                     unknown_error = false;
                 }
+                if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("loginpages/popup1.shtml")) {
+                    unknown_error = false;
+                }
+
                 if (unknown_error) {
                     Console.WriteLine(r.RequestMessage.RequestUri.AbsoluteUri);
                     Console.WriteLine(result);
@@ -192,4 +196,16 @@ Registerd MAC address: 24:FD:52:3F:61:20
             return text.Substring(start, end - start);
         }
     }
+
+    class LoginFailedException : Exception {
+        public LoginFailedException() {
+        }
+
+        public LoginFailedException(string message)
+            : base(message)
+        {
+
+        }
+    }
 }
+
