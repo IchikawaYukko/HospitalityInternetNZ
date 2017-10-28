@@ -24,76 +24,86 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.button_addticket = new System.Windows.Forms.Button();
+            this.button_OK = new System.Windows.Forms.Button();
+            this.button_deleteticket = new System.Windows.Forms.Button();
+            this.button_login = new System.Windows.Forms.Button();
+            this.button_logout = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.ticketGridView = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.username = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.password = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.ticketGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // button_addticket
             // 
-            this.button1.Location = new System.Drawing.Point(60, 189);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "追加";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button_addticket.Location = new System.Drawing.Point(60, 189);
+            this.button_addticket.Name = "button_addticket";
+            this.button_addticket.Size = new System.Drawing.Size(75, 23);
+            this.button_addticket.TabIndex = 0;
+            this.button_addticket.Text = "デバッグ1";
+            this.button_addticket.UseVisualStyleBackColor = true;
+            this.button_addticket.Click += new System.EventHandler(this.button_addticket_Click);
             // 
-            // button2
+            // button_OK
             // 
-            this.button2.Location = new System.Drawing.Point(130, 340);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "OK";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button_OK.Location = new System.Drawing.Point(130, 340);
+            this.button_OK.Name = "button_OK";
+            this.button_OK.Size = new System.Drawing.Size(75, 23);
+            this.button_OK.TabIndex = 1;
+            this.button_OK.Text = "OK";
+            this.button_OK.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // button_deleteticket
             // 
-            this.button3.Location = new System.Drawing.Point(188, 189);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "削除";
-            this.button3.UseVisualStyleBackColor = true;
+            this.button_deleteticket.Location = new System.Drawing.Point(188, 189);
+            this.button_deleteticket.Name = "button_deleteticket";
+            this.button_deleteticket.Size = new System.Drawing.Size(75, 23);
+            this.button_deleteticket.TabIndex = 2;
+            this.button_deleteticket.Text = "デバッグ2";
+            this.button_deleteticket.UseVisualStyleBackColor = true;
+            this.button_deleteticket.Click += new System.EventHandler(this.button_deleteticket_Click);
             // 
-            // button4
+            // button_login
             // 
-            this.button4.Location = new System.Drawing.Point(60, 287);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 3;
-            this.button4.Text = "接続";
-            this.button4.UseVisualStyleBackColor = true;
+            this.button_login.Location = new System.Drawing.Point(60, 287);
+            this.button_login.Name = "button_login";
+            this.button_login.Size = new System.Drawing.Size(75, 23);
+            this.button_login.TabIndex = 3;
+            this.button_login.Text = "接続";
+            this.button_login.UseVisualStyleBackColor = true;
             // 
-            // button5
+            // button_logout
             // 
-            this.button5.Location = new System.Drawing.Point(188, 287);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 4;
-            this.button5.Text = "切断";
-            this.button5.UseVisualStyleBackColor = true;
+            this.button_logout.Location = new System.Drawing.Point(188, 287);
+            this.button_logout.Name = "button_logout";
+            this.button_logout.Size = new System.Drawing.Size(75, 23);
+            this.button_logout.TabIndex = 4;
+            this.button_logout.Text = "切断";
+            this.button_logout.UseVisualStyleBackColor = true;
+            this.button_logout.Click += new System.EventHandler(this.button_logout_Click);
             // 
             // notifyIcon1
             // 
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.Visible = true;
             // 
-            // dataGridView1
+            // ticketGridView
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(50, 33);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 21;
-            this.dataGridView1.Size = new System.Drawing.Size(240, 150);
-            this.dataGridView1.TabIndex = 5;
+            this.ticketGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ticketGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.username,
+            this.password,
+            this.status});
+            this.ticketGridView.Location = new System.Drawing.Point(50, 33);
+            this.ticketGridView.Name = "ticketGridView";
+            this.ticketGridView.RowTemplate.Height = 21;
+            this.ticketGridView.Size = new System.Drawing.Size(269, 150);
+            this.ticketGridView.TabIndex = 5;
             // 
             // label1
             // 
@@ -113,6 +123,28 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "チケット一覧";
             // 
+            // username
+            // 
+            this.username.DataPropertyName = "username";
+            this.username.HeaderText = "ユーザー名";
+            this.username.Name = "username";
+            this.username.Width = 80;
+            // 
+            // password
+            // 
+            this.password.DataPropertyName = "password";
+            this.password.HeaderText = "パスワード";
+            this.password.Name = "password";
+            this.password.Width = 80;
+            // 
+            // status
+            // 
+            this.status.DataPropertyName = "status";
+            this.status.HeaderText = "状態";
+            this.status.Name = "status";
+            this.status.ReadOnly = true;
+            this.status.Width = 55;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -120,15 +152,15 @@
             this.ClientSize = new System.Drawing.Size(415, 375);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.ticketGridView);
+            this.Controls.Add(this.button_logout);
+            this.Controls.Add(this.button_login);
+            this.Controls.Add(this.button_deleteticket);
+            this.Controls.Add(this.button_OK);
+            this.Controls.Add(this.button_addticket);
             this.Name = "Form1";
             this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ticketGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,15 +168,18 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button_addticket;
+        private System.Windows.Forms.Button button_OK;
+        private System.Windows.Forms.Button button_deleteticket;
+        private System.Windows.Forms.Button button_login;
+        private System.Windows.Forms.Button button_logout;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView ticketGridView;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn username;
+        private System.Windows.Forms.DataGridViewTextBoxColumn password;
+        private System.Windows.Forms.DataGridViewTextBoxColumn status;
     }
 }
 
