@@ -79,7 +79,18 @@ namespace HospitalityInternetNZ {
             var state = new Dictionary<string, string>();
             var result = r.Content.ReadAsStringAsync().Result;
 
-            // ignore Welcome To Administrator Login Page
+            // ignore Administrator Login Page
+            if (result.Contains("Welcome To Administrator Login Page")) {
+                state.Add("msg", "");
+                state.Add("byteamount", "");
+                state.Add("session", "");
+                state.Add("umac", "");
+                state.Add("unicodeusername", "");
+                state.Add("sessionlength", "");
+                state.Add("chargetype", "");
+
+                return state;
+            }
 
             // parse result text
             state.Add("msg", result.SubStringByToken("msg = \"", "\""));
