@@ -79,6 +79,8 @@ namespace HospitalityInternetNZ {
             var state = new Dictionary<string, string>();
             var result = r.Content.ReadAsStringAsync().Result;
 
+            // ignore Welcome To Administrator Login Page
+
             // parse result text
             state.Add("msg", result.SubStringByToken("msg = \"", "\""));
             state.Add("byteamount", result.SubStringByToken("byteamount = \"", "\""));
@@ -115,34 +117,35 @@ Registerd MAC address: 24:FD:52:3F:61:20
                 //Error handlings
                 var unknown_error = true;   // HACK
                 if (result.Contains("Can%20not%20read%20data%20from%20Cookie")) {
+                    // TODO throw exception
                     Console.WriteLine("Can not read data from Cookie");     // HACK
                     unknown_error = false;
                 }
                 if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("Invalid%20username%20or%20password")) {
-                    Console.WriteLine("Invalid username or password");
                     unknown_error = false;
-
-                    // TODO throw exception
+                    throw new LoginFailedException("Invalid username or password");
                 }
                 if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("Your%20have%20run%20out%20of%20your%20qouta")) {
-                    Console.WriteLine("Your have run out of your qouta");
                     unknown_error = false;
+                    throw new LoginFailedException("Your have run out of your qouta");
                 }
                 if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("The%20account%20is%20expired")) {
-                    Console.WriteLine("The account is expired");
                     unknown_error = false;
+                    throw new LoginFailedException("The account is expired");
                 }
                 if (r.RequestMessage.RequestUri.AbsoluteUri.Contains("loginpages/popup1.shtml")) {
+                    //when success page, reset flag
                     unknown_error = false;
                 }
 
                 if (unknown_error) {
-                    Console.WriteLine(r.RequestMessage.RequestUri.AbsoluteUri);
-                    Console.WriteLine(result);
+                    throw new LoginFailedException(r.RequestMessage.RequestUri.AbsoluteUri + result);
                 }
 
                 // save the URL for later uses.
-                _usage_check_url = BASE_URL + "loginpages" + result.SubStringByToken("/loginpages" , "\"");
+                _usage_check_url = BASE_URL + "loginpages" + result.SubStringByToken("/loginpages", "\"");
+            } catch (LoginFailedException) {
+                throw;
             } catch (Exception e) {
                 Console.WriteLine(e.InnerException.ToString());
             }

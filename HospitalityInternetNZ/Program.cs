@@ -49,7 +49,11 @@ MIT License.";
                         } else {
                             // Try login
                             var ticket = new WiFiTicket(args[1], args[2]);
-                            hNZauth.Login(ticket);
+                            try {
+                                hNZauth.Login(ticket);
+                            } catch (LoginFailedException e) {
+                                Console.WriteLine(e.Message);
+                            }
 
                             hNZauth.SaveState(STATE_FILENAME);
                             PrintUsage(hNZauth.CheckUsage());
