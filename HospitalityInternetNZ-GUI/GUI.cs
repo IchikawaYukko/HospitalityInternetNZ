@@ -14,7 +14,7 @@ namespace HospitalityInternetNZ_GUI {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             try {
-                Application.Run(new Form1());
+                Application.Run(new Form_ticket());
             } catch (Exception e) {
                 var p = e;  // TODO for debug. remove.
             }

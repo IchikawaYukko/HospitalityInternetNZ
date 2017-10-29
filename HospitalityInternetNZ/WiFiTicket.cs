@@ -12,6 +12,7 @@ namespace HospitalityInternetNZ {
             UNUSED,
             EXPIRED
         }
+
         public WiFiTicket() {
         }
         public WiFiTicket(string user, string pass) {

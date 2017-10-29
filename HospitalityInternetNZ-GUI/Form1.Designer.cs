@@ -1,5 +1,5 @@
 ﻿namespace HospitalityInternetNZ_GUI {
-    partial class Form1 {
+    partial class Form_ticket {
         /// <summary>
         /// 必要なデザイナー変数です。
         /// </summary>
@@ -31,17 +31,19 @@
             this.button_logout = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.ticketGridView = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.username = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.password = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label_conn_status = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.ticketGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // button_addticket
             // 
-            this.button_addticket.Location = new System.Drawing.Point(60, 189);
+            this.button_addticket.Location = new System.Drawing.Point(287, 122);
             this.button_addticket.Name = "button_addticket";
             this.button_addticket.Size = new System.Drawing.Size(75, 23);
             this.button_addticket.TabIndex = 0;
@@ -51,7 +53,7 @@
             // 
             // button_OK
             // 
-            this.button_OK.Location = new System.Drawing.Point(130, 340);
+            this.button_OK.Location = new System.Drawing.Point(344, 99);
             this.button_OK.Name = "button_OK";
             this.button_OK.Size = new System.Drawing.Size(75, 23);
             this.button_OK.TabIndex = 1;
@@ -60,7 +62,7 @@
             // 
             // button_deleteticket
             // 
-            this.button_deleteticket.Location = new System.Drawing.Point(188, 189);
+            this.button_deleteticket.Location = new System.Drawing.Point(303, 70);
             this.button_deleteticket.Name = "button_deleteticket";
             this.button_deleteticket.Size = new System.Drawing.Size(75, 23);
             this.button_deleteticket.TabIndex = 2;
@@ -70,16 +72,17 @@
             // 
             // button_login
             // 
-            this.button_login.Location = new System.Drawing.Point(60, 287);
+            this.button_login.Location = new System.Drawing.Point(328, 151);
             this.button_login.Name = "button_login";
             this.button_login.Size = new System.Drawing.Size(75, 23);
             this.button_login.TabIndex = 3;
             this.button_login.Text = "接続";
             this.button_login.UseVisualStyleBackColor = true;
+            this.button_login.Click += new System.EventHandler(this.button_login_Click);
             // 
             // button_logout
             // 
-            this.button_logout.Location = new System.Drawing.Point(188, 287);
+            this.button_logout.Location = new System.Drawing.Point(328, 215);
             this.button_logout.Name = "button_logout";
             this.button_logout.Size = new System.Drawing.Size(75, 23);
             this.button_logout.TabIndex = 4;
@@ -99,29 +102,11 @@
             this.username,
             this.password,
             this.status});
-            this.ticketGridView.Location = new System.Drawing.Point(50, 33);
+            this.ticketGridView.Location = new System.Drawing.Point(12, 24);
             this.ticketGridView.Name = "ticketGridView";
             this.ticketGridView.RowTemplate.Height = 21;
             this.ticketGridView.Size = new System.Drawing.Size(269, 150);
             this.ticketGridView.TabIndex = 5;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(115, 237);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 12);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "接続状態";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(58, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 12);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "チケット一覧";
             // 
             // username
             // 
@@ -145,11 +130,39 @@
             this.status.ReadOnly = true;
             this.status.Width = 55;
             // 
-            // Form1
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 189);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "接続状態";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(62, 12);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "チケット一覧";
+            // 
+            // label_conn_status
+            // 
+            this.label_conn_status.AutoSize = true;
+            this.label_conn_status.Location = new System.Drawing.Point(30, 226);
+            this.label_conn_status.Name = "label_conn_status";
+            this.label_conn_status.Size = new System.Drawing.Size(87, 12);
+            this.label_conn_status.TabIndex = 8;
+            this.label_conn_status.Text = "connstatus_here";
+            // 
+            // Form_ticket
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(415, 375);
+            this.Controls.Add(this.label_conn_status);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ticketGridView);
@@ -158,8 +171,8 @@
             this.Controls.Add(this.button_deleteticket);
             this.Controls.Add(this.button_OK);
             this.Controls.Add(this.button_addticket);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Form_ticket";
+            this.Text = "チケット状態";
             ((System.ComponentModel.ISupportInitialize)(this.ticketGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -180,6 +193,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn username;
         private System.Windows.Forms.DataGridViewTextBoxColumn password;
         private System.Windows.Forms.DataGridViewTextBoxColumn status;
+        private System.Windows.Forms.Label label_conn_status;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
