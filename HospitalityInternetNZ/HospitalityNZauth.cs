@@ -26,7 +26,8 @@ namespace HospitalityInternetNZ {
                 CookieContainer = new CookieContainer()
             };
             _client = new HttpClient(_handler) {
-                BaseAddress = new Uri(BASE_URL)
+                BaseAddress = new Uri(BASE_URL),
+                Timeout = TimeSpan.FromMilliseconds(LOGIN_CHECK_TIMEOUT)
             };
 
         }
@@ -54,7 +55,6 @@ namespace HospitalityInternetNZ {
         public bool CheckLoggedIn() {
             try {
                 // Try access to initial URL
-                _client.Timeout = TimeSpan.FromMilliseconds(LOGIN_CHECK_TIMEOUT);
                 var r = _client.GetAsync(INIT_URL).Result;
 
                 // get and save session cookie
