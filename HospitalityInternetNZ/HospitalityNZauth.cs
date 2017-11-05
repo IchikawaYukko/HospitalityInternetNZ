@@ -75,9 +75,19 @@ namespace HospitalityInternetNZ {
 
         // Check remaining usage(MBs or Times)
         public Dictionary<string, string> CheckUsage() {
-            var r = _client.GetAsync(_usage_check_url).Result;
+            string result = "";
             var state = new Dictionary<string, string>();
-            var result = r.Content.ReadAsStringAsync().Result;
+
+            try {
+                var r = _client.GetAsync(_usage_check_url).Result;
+                result = r.Content.ReadAsStringAsync().Result;
+            } catch (AggregateException e) {
+                //Ignore TaskCanceledException. it means to timed out accessing URL
+                if (!(e.InnerException is System.Threading.Tasks.TaskCanceledException)) {
+                    Console.WriteLine(e.InnerException.ToString());
+                    throw;
+                }
+            }
 
             // ignore Administrator Login Page
             if (result.Contains("Welcome To Administrator Login Page")) {
@@ -148,6 +158,8 @@ Registerd MAC address: 24:FD:52:3F:61:20
                     //when success page, reset flag
                     unknown_error = false;
                 }
+
+                // TODO "Deny login because you have loggedin the system via the other machine."
 
                 if (unknown_error) {
                     throw new LoginFailedException(r.RequestMessage.RequestUri.AbsoluteUri + result);

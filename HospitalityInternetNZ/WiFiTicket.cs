@@ -2,14 +2,14 @@
 
 namespace HospitalityInternetNZ {
     // TODO move another file
-    class WiFiTicket {
+    public class WiFiTicket {
         public string username { get; set; }
         public string password { get; set; }
-        public int status { get; set; }
+        public TicketStatus status { get; set; }
         public enum TicketStatus {
+            UNUSED,
             WRONG_ID_OR_PASS,
             USING,
-            UNUSED,
             EXPIRED
         }
 
@@ -21,7 +21,7 @@ namespace HospitalityInternetNZ {
 
             if (!username.Contains("@")) {
                 // Username must include @.
-                this.status = (int)WiFiTicket.TicketStatus.WRONG_ID_OR_PASS;
+                this.status = WiFiTicket.TicketStatus.WRONG_ID_OR_PASS;
             }
         }
     }

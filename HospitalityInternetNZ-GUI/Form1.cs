@@ -14,6 +14,7 @@ namespace HospitalityInternetNZ_GUI {
         HospitalityNZauth hNZauth;
         BindingList<WiFiTicket> tickets;
         const string STATE_FILENAME = "session.cookie"; // HACK shouldn't hard code. or use temp dir.
+        const string TICKET_FILENAME = "tickets.xml";
 
         public Form_ticket() {
             InitializeComponent();
@@ -21,7 +22,8 @@ namespace HospitalityInternetNZ_GUI {
             this.hNZauth = new HospitalityNZauth();
 
             //ticket list
-            tickets = new BindingList<WiFiTicket>();
+            //tickets = new BindingList<WiFiTicket>();
+            LoadTickets();
             //can be edit by data grid view
             tickets.AllowNew = true;
             tickets.AllowEdit = true;
@@ -29,7 +31,7 @@ namespace HospitalityInternetNZ_GUI {
 
             ticketGridView.DataSource = this.tickets;
 
-            tickets.Add(new WiFiTicket("t5t5@h", "5n8k782h"));  // TODO for debug. remove later.
+            //tickets.Add(new WiFiTicket("t5t5@h", "5n8k782h"));  // TODO for debug. remove later.
         }
 
         private void button_logout_Click(object sender, EventArgs e) {
@@ -47,16 +49,21 @@ namespace HospitalityInternetNZ_GUI {
 
         private void button_deleteticket_Click(object sender, EventArgs e) {
             var p = 0; // temp
+            SaveTickets();
         }
 
-        private void button_login_Click(object sender, EventArgs e) {
+        private async void button_login_Click(object sender, EventArgs e) {
             if (this.tickets.Count == 0) {
                 this.label_conn_status.Text = "No tickets registered. Please add ticket on above list.";
                 return;
             }
 
             // Check Logged in or not
-            if (hNZauth.CheckLoggedIn()) {
+            bool loggedin = false;
+            await Task.Run(() => {
+                loggedin = hNZauth.CheckLoggedIn();
+            });
+            if (loggedin) {
                 this.label_conn_status.Text = "You are already logged in.";
                 hNZauth.LoadState(STATE_FILENAME);
                 //PrintUsage(hNZauth.CheckUsage());
@@ -67,6 +74,32 @@ namespace HospitalityInternetNZ_GUI {
                 hNZauth.SaveState(STATE_FILENAME);
                 this.label_conn_status.Text = FormatUsage(hNZauth.CheckUsage());
             }
+        }
+
+        private void SaveTickets() {
+            List<WiFiTicket> ticket_list = this.tickets.ToList<WiFiTicket>();
+
+            System.Xml.Serialization.XmlSerializer ser =
+                new System.Xml.Serialization.XmlSerializer(
+                    typeof(List<WiFiTicket>));
+            using (
+                System.IO.StreamWriter sw = new System.IO.StreamWriter
+                    (TICKET_FILENAME, false, new System.Text.UTF8Encoding(false))
+            ) {
+                ser.Serialize(sw, ticket_list);
+                sw.Close();
+            }
+        }
+
+        private void LoadTickets() {
+            var ticket_list = new List<WiFiTicket>();
+            using (var sr = new System.IO.StreamReader(TICKET_FILENAME, new System.Text.UTF8Encoding(false))) {
+                var ser = new System.Xml.Serialization.XmlSerializer(typeof(List<WiFiTicket>));
+                ticket_list = (List<WiFiTicket>) ser.Deserialize(sr);
+                sr.Close();
+            }
+            BindingList<WiFiTicket> ticket_bdlist = new BindingList<WiFiTicket>(ticket_list);
+            this.tickets = ticket_bdlist;
         }
 
         // format state message
