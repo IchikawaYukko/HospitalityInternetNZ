@@ -59,7 +59,7 @@ namespace HospitalityInternetNZ_GUI {
             await Login(this.tickets[0]);
         }
 
-        private async Task<int> Login(WiFiTicket t) {
+        private async Task Login(WiFiTicket t) {
             // Check Logged in or not
             bool loggedin = false;
             await Task.Run(() => {  // HACK
@@ -76,8 +76,6 @@ namespace HospitalityInternetNZ_GUI {
                 hNZauth.SaveState(STATE_FILENAME);
                 this.label_conn_status.Text = FormatUsage(hNZauth.CheckUsage());
             }
-
-            return 0;
         }
 
         //Save tickets to XML
