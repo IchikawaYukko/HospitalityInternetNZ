@@ -33,7 +33,7 @@ namespace HospitalityInternetNZ {
         }
 
         // Check PC connected to right Wi-Fi Access point
-        public bool CheckConnected() {
+        public bool CheckConnected() {  // HACK to async class
             using (var p = new Ping()) {
                 try {
                     PingReply reply = p.Send(AUTH_SERVER_ADDR);
@@ -52,7 +52,7 @@ namespace HospitalityInternetNZ {
         }
 
 
-        public bool CheckLoggedIn() {
+        public bool CheckLoggedIn() {   // HACK to async class
             try {
                 // Try access to initial URL
                 var r = _client.GetAsync(INIT_URL).Result;
@@ -74,7 +74,7 @@ namespace HospitalityInternetNZ {
         }
 
         // Check remaining usage(MBs or Times)
-        public Dictionary<string, string> CheckUsage() {
+        public Dictionary<string, string> CheckUsage() {    // HACK to async class
             string result = "";
             var state = new Dictionary<string, string>();
 
@@ -123,7 +123,7 @@ Registerd MAC address: 24:FD:52:3F:61:20
 */
         }
 
-        public void Login(WiFiTicket ticket) {
+        public void Login(WiFiTicket ticket) {  // HACK to async class
             var content = new FormUrlEncodedContent(new Dictionary<string, string> {
                 {"myusername", ticket.username},
                 {"mypassword", ticket.password}
@@ -174,7 +174,7 @@ Registerd MAC address: 24:FD:52:3F:61:20
             }
         }
 
-        public void Logout() {
+        public void Logout() {  // HACK to async class
             var r = _client.GetAsync(LOGOUT_URL).Result;
         }
 
