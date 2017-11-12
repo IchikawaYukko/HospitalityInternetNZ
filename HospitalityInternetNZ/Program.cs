@@ -23,7 +23,7 @@ Sub-commands:
   status                   Show connection details.
 
 MIT License.";
-        const string STATE_FILENAME = "session.cookie";
+        const string STATE_FILENAME = "hnzauth_session.cookie";
 
         static void Main(string[] args)
         {
@@ -44,7 +44,7 @@ MIT License.";
                         // Check Logged in or not
                         if (hNZauth.CheckLoggedIn()) {
                             Console.WriteLine("You are already logged in.");
-                            hNZauth.LoadState(STATE_FILENAME);
+                            hNZauth.LoadState(hNZauth.TEMPDIR_PATH + STATE_FILENAME);
                             PrintUsage(hNZauth.CheckUsage());
                         } else {
                             // Try login
@@ -55,7 +55,7 @@ MIT License.";
                                 Console.WriteLine(e.Message);
                             }
 
-                            hNZauth.SaveState(STATE_FILENAME);
+                            hNZauth.SaveState(hNZauth.TEMPDIR_PATH + STATE_FILENAME);
                             PrintUsage(hNZauth.CheckUsage());
                         }
                         break;
@@ -71,7 +71,7 @@ MIT License.";
                     case "stat":
                     case "status":
                         if (hNZauth.CheckLoggedIn()) {
-                            hNZauth.LoadState(STATE_FILENAME);
+                            hNZauth.LoadState(hNZauth.TEMPDIR_PATH + STATE_FILENAME);
                             PrintUsage(hNZauth.CheckUsage());
                         } else {
                             Console.WriteLine("You are not logged in.");

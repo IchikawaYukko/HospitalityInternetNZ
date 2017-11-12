@@ -7,19 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 using HospitalityInternetNZ;
 
 namespace HospitalityInternetNZ_GUI {
     public partial class Form_ticket : Form {
         HospitalityNZauth hNZauth;
         BindingList<WiFiTicket> tickets;
-        const string STATE_FILENAME = "session.cookie"; // HACK shouldn't hard code. or use temp dir.
-        const string TICKET_FILENAME = "tickets.xml";
+        readonly string TEMPDIR_PATH;
+        const string STATE_FILENAME = "hnzauth_session.cookie"; // HACK shouldn't hard code.
+        const string TICKET_FILENAME = "hnzauth_tickets.xml";
 
         public Form_ticket() {
             InitializeComponent();
 
             this.hNZauth = new HospitalityNZauth();
+            this.TEMPDIR_PATH = hNZauth.TEMPDIR_PATH;
 
             LoadTickets();
             //can be edit by data grid view
@@ -67,13 +70,13 @@ namespace HospitalityInternetNZ_GUI {
             });
             if (loggedin) {
                 this.label_conn_status.Text = "You are already logged in.";
-                hNZauth.LoadState(STATE_FILENAME);
+                hNZauth.LoadState(TEMPDIR_PATH + STATE_FILENAME);
                 //PrintUsage(hNZauth.CheckUsage());
             } else {
                 // Try login
                 hNZauth.Login(t);
 
-                hNZauth.SaveState(STATE_FILENAME);
+                hNZauth.SaveState(TEMPDIR_PATH + STATE_FILENAME);
                 this.label_conn_status.Text = FormatUsage(hNZauth.CheckUsage());
             }
         }
@@ -87,7 +90,7 @@ namespace HospitalityInternetNZ_GUI {
                     typeof(List<WiFiTicket>));
             using (
                 System.IO.StreamWriter sw = new System.IO.StreamWriter
-                    (TICKET_FILENAME, false, new System.Text.UTF8Encoding(false))
+                    (TEMPDIR_PATH + TICKET_FILENAME, false, new System.Text.UTF8Encoding(false))
             ) {
                 ser.Serialize(sw, ticket_list);
                 sw.Close();
@@ -97,10 +100,15 @@ namespace HospitalityInternetNZ_GUI {
         //Load tickets from XML
         private void LoadTickets() {
             var ticket_list = new List<WiFiTicket>();
-            using (var sr = new System.IO.StreamReader(TICKET_FILENAME, new System.Text.UTF8Encoding(false))) {
-                var ser = new System.Xml.Serialization.XmlSerializer(typeof(List<WiFiTicket>));
-                ticket_list = (List<WiFiTicket>) ser.Deserialize(sr);
-                sr.Close();
+
+            try {
+                using (var sr = new System.IO.StreamReader(TEMPDIR_PATH + TICKET_FILENAME, new System.Text.UTF8Encoding(false))) {
+                    var ser = new System.Xml.Serialization.XmlSerializer(typeof(List<WiFiTicket>));
+                    ticket_list = (List<WiFiTicket>)ser.Deserialize(sr);
+                    sr.Close();
+                }
+            } catch (FileNotFoundException) {
+                //do nothing. just ignore exception.
             }
             BindingList<WiFiTicket> ticket_bdlist = new BindingList<WiFiTicket>(ticket_list);
             this.tickets = ticket_bdlist;

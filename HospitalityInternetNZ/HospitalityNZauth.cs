@@ -12,6 +12,7 @@ namespace HospitalityInternetNZ {
         private HttpClientHandler _handler;
         private CookieCollection _session_cookie;
         private string _usage_check_url;
+        public readonly string TEMPDIR_PATH;
         const string AUTH_SERVER_ADDR = "10.0.0.100";
         const string INIT_URL = "http://2.2.2.2/";
         const string LOGOUT_URL = "http://1.1.1.1/";
@@ -30,6 +31,12 @@ namespace HospitalityInternetNZ {
                 Timeout = TimeSpan.FromMilliseconds(LOGIN_CHECK_TIMEOUT)
             };
 
+            // Get and check exist temp directory.
+            if (System.IO.Directory.Exists(Path.GetTempPath())) {
+                this.TEMPDIR_PATH = Path.GetTempPath();
+            } else {
+                this.TEMPDIR_PATH = "";
+            }
         }
 
         // Check PC connected to right Wi-Fi Access point
