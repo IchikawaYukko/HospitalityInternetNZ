@@ -24,9 +24,9 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.button_addticket = new System.Windows.Forms.Button();
+            this.button_debug1 = new System.Windows.Forms.Button();
             this.button_OK = new System.Windows.Forms.Button();
-            this.button_deleteticket = new System.Windows.Forms.Button();
+            this.button_debug2 = new System.Windows.Forms.Button();
             this.button_login = new System.Windows.Forms.Button();
             this.button_logout = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
@@ -41,15 +41,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.ticketGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // button_addticket
+            // button_debug1
             // 
-            this.button_addticket.Location = new System.Drawing.Point(287, 122);
-            this.button_addticket.Name = "button_addticket";
-            this.button_addticket.Size = new System.Drawing.Size(75, 23);
-            this.button_addticket.TabIndex = 0;
-            this.button_addticket.Text = "デバッグ1";
-            this.button_addticket.UseVisualStyleBackColor = true;
-            this.button_addticket.Click += new System.EventHandler(this.button_addticket_Click);
+            this.button_debug1.Location = new System.Drawing.Point(287, 122);
+            this.button_debug1.Name = "button_debug1";
+            this.button_debug1.Size = new System.Drawing.Size(75, 23);
+            this.button_debug1.TabIndex = 0;
+            this.button_debug1.Text = "デバッグ1";
+            this.button_debug1.UseVisualStyleBackColor = true;
+            this.button_debug1.Click += new System.EventHandler(this.button_addticket_Click);
             // 
             // button_OK
             // 
@@ -60,15 +60,15 @@
             this.button_OK.Text = "OK";
             this.button_OK.UseVisualStyleBackColor = true;
             // 
-            // button_deleteticket
+            // button_debug2
             // 
-            this.button_deleteticket.Location = new System.Drawing.Point(303, 70);
-            this.button_deleteticket.Name = "button_deleteticket";
-            this.button_deleteticket.Size = new System.Drawing.Size(75, 23);
-            this.button_deleteticket.TabIndex = 2;
-            this.button_deleteticket.Text = "デバッグ2";
-            this.button_deleteticket.UseVisualStyleBackColor = true;
-            this.button_deleteticket.Click += new System.EventHandler(this.button_deleteticket_Click);
+            this.button_debug2.Location = new System.Drawing.Point(303, 70);
+            this.button_debug2.Name = "button_debug2";
+            this.button_debug2.Size = new System.Drawing.Size(75, 23);
+            this.button_debug2.TabIndex = 2;
+            this.button_debug2.Text = "デバッグ2";
+            this.button_debug2.UseVisualStyleBackColor = true;
+            this.button_debug2.Click += new System.EventHandler(this.button_debug2_Click);
             // 
             // button_login
             // 
@@ -78,7 +78,7 @@
             this.button_login.TabIndex = 3;
             this.button_login.Text = "接続";
             this.button_login.UseVisualStyleBackColor = true;
-            this.button_login.Click += new System.EventHandler(this.button_login_Click);
+            this.button_login.Click += new System.EventHandler(this.button_debug1_Click);
             // 
             // button_logout
             // 
@@ -107,6 +107,8 @@
             this.ticketGridView.RowTemplate.Height = 21;
             this.ticketGridView.Size = new System.Drawing.Size(269, 150);
             this.ticketGridView.TabIndex = 5;
+            this.ticketGridView.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.ticketGridView_RowValidated);
+            this.ticketGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.ticketGridView_UserDeletedRow);
             // 
             // username
             // 
@@ -168,9 +170,9 @@
             this.Controls.Add(this.ticketGridView);
             this.Controls.Add(this.button_logout);
             this.Controls.Add(this.button_login);
-            this.Controls.Add(this.button_deleteticket);
+            this.Controls.Add(this.button_debug2);
             this.Controls.Add(this.button_OK);
-            this.Controls.Add(this.button_addticket);
+            this.Controls.Add(this.button_debug1);
             this.Name = "Form_ticket";
             this.Text = "チケット状態";
             ((System.ComponentModel.ISupportInitialize)(this.ticketGridView)).EndInit();
@@ -181,9 +183,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button_addticket;
+        private System.Windows.Forms.Button button_debug1;
         private System.Windows.Forms.Button button_OK;
-        private System.Windows.Forms.Button button_deleteticket;
+        private System.Windows.Forms.Button button_debug2;
         private System.Windows.Forms.Button button_login;
         private System.Windows.Forms.Button button_logout;
         private System.Windows.Forms.NotifyIcon notifyIcon1;

@@ -45,17 +45,22 @@ namespace HospitalityInternetNZ_GUI {
         }
 
         private void button_addticket_Click(object sender, EventArgs e) {
+            
         }
 
-        private void button_deleteticket_Click(object sender, EventArgs e) {
+        private void button_debug2_Click(object sender, EventArgs e) {
             var p = 0; // temp
             SaveTickets();
         }
 
-        private async void button_login_Click(object sender, EventArgs e) {
+        private async void button_debug1_Click(object sender, EventArgs e) {
+            await Login(new WiFiTicket());
+        }
+
+        private async Task<int> Login(WiFiTicket t) {
             if (this.tickets.Count == 0) {
                 this.label_conn_status.Text = "No tickets registered. Please add ticket on above list.";
-                return;
+                return 0;
             }
 
             // Check Logged in or not
@@ -74,6 +79,8 @@ namespace HospitalityInternetNZ_GUI {
                 hNZauth.SaveState(STATE_FILENAME);
                 this.label_conn_status.Text = FormatUsage(hNZauth.CheckUsage());
             }
+
+            return 0;
         }
 
         private void SaveTickets() {
@@ -115,6 +122,14 @@ namespace HospitalityInternetNZ_GUI {
             message += "\nRegistered MAC address: " + state["umac"];
 
             return message;
+        }
+
+        private void ticketGridView_RowValidated(object sender, DataGridViewCellEventArgs e) {
+            SaveTickets();
+        }
+
+        private void ticketGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e) {
+            SaveTickets();
         }
     }
 }
