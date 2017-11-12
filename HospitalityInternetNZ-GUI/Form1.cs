@@ -21,8 +21,6 @@ namespace HospitalityInternetNZ_GUI {
 
             this.hNZauth = new HospitalityNZauth();
 
-            //ticket list
-            //tickets = new BindingList<WiFiTicket>();
             LoadTickets();
             //can be edit by data grid view
             tickets.AllowNew = true;
@@ -30,42 +28,41 @@ namespace HospitalityInternetNZ_GUI {
             tickets.AllowRemove = true;
 
             ticketGridView.DataSource = this.tickets;
-
-            //tickets.Add(new WiFiTicket("t5t5@h", "5n8k782h"));  // TODO for debug. remove later.
         }
 
-        private void button_logout_Click(object sender, EventArgs e) {
+        private async void button_logout_Click(object sender, EventArgs e) {
             if (hNZauth.CheckLoggedIn()) {
                 // Try logout
-                hNZauth.Logout();
-                //Console.WriteLine("Logged out.");
+                await Task.Run(() => {  // HACK
+                    hNZauth.Logout();
+                });
+                this.label_conn_status.Text = "Logged out.";
             } else {
-                //Console.WriteLine("You are not logged in.");
+                this.label_conn_status.Text = "You are not logged in.";
             }
         }
 
-        private void button_addticket_Click(object sender, EventArgs e) {
+        private void button_debug1_Click(object sender, EventArgs e) {
             
         }
 
         private void button_debug2_Click(object sender, EventArgs e) {
-            var p = 0; // temp
-            SaveTickets();
+            var p = 0; // debug
         }
 
-        private async void button_debug1_Click(object sender, EventArgs e) {
-            await Login(new WiFiTicket());
+        private async void button_login_Click(object sender, EventArgs e) {
+            if (this.tickets.Count == 0) {
+                this.label_conn_status.Text = "No tickets registered. Please add ticket on above list.";
+                return;
+            }
+
+            await Login(this.tickets[0]);
         }
 
         private async Task<int> Login(WiFiTicket t) {
-            if (this.tickets.Count == 0) {
-                this.label_conn_status.Text = "No tickets registered. Please add ticket on above list.";
-                return 0;
-            }
-
             // Check Logged in or not
             bool loggedin = false;
-            await Task.Run(() => {
+            await Task.Run(() => {  // HACK
                 loggedin = hNZauth.CheckLoggedIn();
             });
             if (loggedin) {
@@ -74,7 +71,7 @@ namespace HospitalityInternetNZ_GUI {
                 //PrintUsage(hNZauth.CheckUsage());
             } else {
                 // Try login
-                hNZauth.Login(this.tickets[0]);
+                hNZauth.Login(t);
 
                 hNZauth.SaveState(STATE_FILENAME);
                 this.label_conn_status.Text = FormatUsage(hNZauth.CheckUsage());
@@ -83,6 +80,7 @@ namespace HospitalityInternetNZ_GUI {
             return 0;
         }
 
+        //Save tickets to XML
         private void SaveTickets() {
             List<WiFiTicket> ticket_list = this.tickets.ToList<WiFiTicket>();
 
@@ -98,6 +96,7 @@ namespace HospitalityInternetNZ_GUI {
             }
         }
 
+        //Load tickets from XML
         private void LoadTickets() {
             var ticket_list = new List<WiFiTicket>();
             using (var sr = new System.IO.StreamReader(TICKET_FILENAME, new System.Text.UTF8Encoding(false))) {
@@ -124,10 +123,12 @@ namespace HospitalityInternetNZ_GUI {
             return message;
         }
 
+        //Save tickets when new ticket added.
         private void ticketGridView_RowValidated(object sender, DataGridViewCellEventArgs e) {
             SaveTickets();
         }
 
+        //Save tickets when ticket deleted.
         private void ticketGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e) {
             SaveTickets();
         }

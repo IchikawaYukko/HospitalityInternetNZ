@@ -49,7 +49,7 @@
             this.button_debug1.TabIndex = 0;
             this.button_debug1.Text = "デバッグ1";
             this.button_debug1.UseVisualStyleBackColor = true;
-            this.button_debug1.Click += new System.EventHandler(this.button_addticket_Click);
+            this.button_debug1.Click += new System.EventHandler(this.button_debug1_Click);
             // 
             // button_OK
             // 
@@ -78,7 +78,7 @@
             this.button_login.TabIndex = 3;
             this.button_login.Text = "接続";
             this.button_login.UseVisualStyleBackColor = true;
-            this.button_login.Click += new System.EventHandler(this.button_debug1_Click);
+            this.button_login.Click += new System.EventHandler(this.button_login_Click);
             // 
             // button_logout
             // 
